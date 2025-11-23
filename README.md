@@ -1,97 +1,225 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 📱 React Native ToDo App
 
-# Getting Started
+A simple and efficient **ToDo List App** built with **React Native (0.82.1)**, following a clean architecture and using modern state management, offline support, push notifications, and Firebase integration.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+---
 
-## Step 1: Start Metro
+## 🚀 Project Overview
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+### ✅ Interview Requirements Completed
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+Below are the requirements provided by the interviewer and their completion status:
 
-```sh
-# Using npm
+#### **1. Authentication**
+
+* ✔ Sign Up & Login using Firebase Authentication (email/password)
+* ✔ User session is persisted using Firebase Auth + Redux Persist
+
+#### **2. Task Management**
+
+* ✔ Add, edit, delete tasks
+* ✔ Mark tasks as complete/incomplete
+* ✔ Tasks stored locally using **Redux Persist** instead of Realm/SQLite due to time constraints
+* ✔ Tasks sync to Firebase Firestore when device is online
+
+#### **3. Offline Support**
+
+* ❌ Local DB (Realm or SQLite) was not added
+
+  * → Instead, **Redux Persist** is used for local storage
+* ✔ Sync changes made offline when connectivity is restored
+
+  * → Achieved through **Firestore offline persistence**
+
+#### **4. Push Notifications**
+
+* ✔ Local push notifications using Notifee
+* ✔ Bonus: Server push notifications supported via Firebase Cloud Messaging
+
+#### **5. Multi-Environment Config**
+
+* ✔ Supports dev, staging, and production environments using `react-native-dotenv`
+
+#### **6. Theming**
+
+* ✔ Light and Dark mode implemented
+
+#### **7. State Management**
+
+* ✔ Redux Toolkit used for global state
+
+#### **8. Navigation**
+
+* ✔ Proper navigation flow using React Navigation (Auth Stack + App Stack)
+  This app allows users to:
+* Create, update, and delete tasks
+* Sync data with Firebase Firestore
+* Work offline with persistence
+* Receive scheduled task reminders
+* Maintain authentication state with Firebase Auth
+
+---
+
+## 🏗️ Architecture Choice
+
+The project follows a **Modular + Feature-Based Architecture**, ensuring scalability and clean code.
+
+### **Key Architecture Decisions**
+
+* **Feature-Based Folder Structure** for scalability
+* **Redux Toolkit** for predictable state management
+* **Redux Persist** for offline state caching
+* **Firebase (Auth + Firestore)** as backend
+* **Notifee** for background & scheduled notifications
+* **React Navigation** for screen management
+* **AsyncStorage** for local storage
+
+---
+
+## 📦 Libraries Used
+
+### **Core Dependencies**
+
+* **react-native**: App UI development
+* **react** 19: Core framework
+* **@react-navigation/native** & **stack**: Navigation
+* **@reduxjs/toolkit**, **react-redux**: Global state management
+* **redux-persist**: Offline state local storage
+* **@react-native-community/netinfo**: Network detection for syncing
+* **@react-native-async-storage/async-storage**: Local key/value storage
+* **axios**: API calls (if needed)
+* **moment**: Date formatting
+
+### **Firebase**
+
+* **@react-native-firebase/app**
+* **@react-native-firebase/auth**
+* **@react-native-firebase/firestore**
+* **@react-native-firebase/messaging**
+
+Used for authentication, Firestore DB, messaging & notifications.
+
+### **Notifications**
+
+* **@notifee/react-native**: Local scheduled notifications
+
+### **UI / Utilities**
+
+* **react-native-reanimated**
+* **react-native-gesture-handler**
+* **react-native-screens**
+* **react-native-safe-area-context**
+* **react-native-snackbar**
+* **react-native-dotenv**: Environment variables
+
+---
+
+## ▶️ How to Run the App
+
+### **1️⃣ Install Dependencies**
+
+```bash
+npm install
+# or
+yarn install
+```
+
+### **2️⃣ Setup Environment Variables**
+
+Create a `.env` file:
+
+```
+BASE_URL=xxxx
+BUCKET_URL=xxxx
+```
+
+Make sure the values match your Firebase configuration.
+
+---
+
+## 🟦 Running on Android
+
+### **Step 1: Start Metro Bundler**
+
+```bash
 npm start
-
-# OR using Yarn
-yarn start
 ```
 
-## Step 2: Build and run your app
+### **Step 2: Run on Android**
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
+```bash
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
+Make sure an emulator or USB device is connected.
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+---
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+## 🍏 Running on iOS (Mac Only)
 
-```sh
-bundle install
+### **Step 1: Install Pods**
+
+```bash
+cd ios
+pod install
 ```
 
-Then, and every time you update your native dependencies, run:
+### **Step 2: Start the App**
 
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+```bash
+cd ..
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+---
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 🔥 Firebase Setup
 
-## Step 3: Modify your app
+### **Android**
 
-Now that you have successfully run the app, let's make changes!
+* Place `google-services.json` in `android/app/`
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+### **iOS**
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+* Place `GoogleService-Info.plist` in `ios/` directory
+* Enable Push Notifications & Background Modes
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+---
 
-## Congratulations! :tada:
+## 🔔 Notifications Setup
 
-You've successfully run and modified your React Native App. :partying_face:
+* Notifee requires additional steps for Android channels & permissions
+* Foreground, background, scheduled notifications supported
 
-### Now what?
+---
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+## ⚠️ Known Limitations
 
-# Troubleshooting
+* iOS push notifications require Apple Developer Program
+* Offline-first Firestore sync may delay updates if reconnecting after long offline periods
+* Notifications may behave differently across Android OEMs (battery optimization)
+* Some animations may require enabling Reanimated Babel plugin
+* Firestore batch writes for very large datasets are not yet optimized
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+---
 
-# Learn More
+## 📌 Final Notes
 
-To learn more about React Native, take a look at the following resources:
+This project showcases:
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+* Clean architecture
+* Offline-first design
+* Firebase integration
+* Scheduling reminders with Notifee
+
+Feel free to extend the project or integrate more features like:
+
+* Task categories
+* Cloud backup restore
+* Dark mode
+
+---
+
+### 👨‍💻 Author
+
+**Ankan Roy** — React Native Developer
