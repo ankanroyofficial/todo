@@ -1,45 +1,37 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import React, { useEffect } from 'react';
+import StackNavigation from './src/navigation/StackNavigation';
+import { PermissionsAndroid, Platform } from 'react-native';
 import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+  getFcmToken,
+  requestUserPermission,
+  scheduleEvery5Hours,
+} from './src/utils/helpers/pushnotification_helper';
+const App = () => {
+  // ------------------------Push notification--------------------------
+  async function requestAndroidPermissions() {
+    if (Platform.OS === 'android' && Platform.Version >= 33) {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
+      );
+      // if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      //   console.log('Notification permission granted.');
+      // } else {
+      //   console.log('Notification permission denied.');
+      // }
+    }
+  }
+  useEffect(() => {
+    requestAndroidPermissions();
+  }, []);
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
-  );
-}
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+  useEffect(() => {
+    requestUserPermission();
+    getFcmToken();
+  }, []);
+  useEffect(() => {
+    scheduleEvery5Hours('Time to check your tasks and create new ones.');
+  }, []);
+  return <StackNavigation />;
+};
 
 export default App;
