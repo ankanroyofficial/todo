@@ -1,6 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import authReducer from './slice/auth.slice';
 import todoReducer from './slice/todo.slice';
+import productReducer from './slice/product.slice';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import Storage from '@app/utils/storage';
@@ -9,12 +10,13 @@ import { logger } from 'redux-logger';
 const rootReducer = combineReducers({
   auth: authReducer,
   todo: todoReducer,
+  product: productReducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage: Storage,
-  whitelist: ['auth', 'todo'],
+  whitelist: ['auth', 'todo','product'],
   blacklist: [],
 };
 

@@ -1,7 +1,7 @@
 import { Colors } from '@app/themes';
 import { normalize } from '@app/utils/orientation';
-import { Dimensions, StyleSheet } from 'react-native';
-const { height, width } = Dimensions.get('screen');
+import { StyleSheet } from 'react-native';
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     height: normalize(18),
-    width: normalize(18),
+    width: normalize(18), 
   },
   headerText: {
     fontSize: 18,
@@ -23,14 +23,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   listContent: {
-    paddingHorizontal: 16,
-    paddingBottom: 16,
+    padding: 16,
   },
-  itemContainer: {
+  itemContainer: { 
     padding: normalize(15),
     marginBottom: 8,
     borderRadius: 8,
-
+  
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
@@ -42,7 +41,7 @@ const styles = StyleSheet.create({
   floatingButton: {
     height: normalize(50),
     width: normalize(50),
-    borderRadius: normalize(30),
+    borderRadius: normalize(30), 
     position: 'absolute',
     bottom: normalize(60),
     right: normalize(30),
@@ -59,31 +58,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     margin: normalize(15),
-  },
-  loader: {
-    height,
-    width,
-    position: 'absolute',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  productDetailsImage: {
-    height: normalize(150),
-    width: normalize(150),
-    backgroundColor: '#f5f5f5',
-    alignSelf: 'center',
-  },
-  image: {
-    height: '100%',
-    width: '100%',
-    resizeMode: 'contain',
-  },
-  optionTitle: {
-    fontSize: normalize(12),
-    fontWeight: '500',
-    color: 'gray',
-    marginBottom: normalize(2),
   },
 });
 

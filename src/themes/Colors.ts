@@ -12,10 +12,14 @@ const Colors = {
     dark: '#f0eef3ff',
   },
 
-  cardColor:{
-    light:'#eeeaeaff',
-    dark:'#242323ff'
-  } 
+  cardColor: {
+    light: '#eeeaeaff',
+    dark: '#242323ff',
+  },
+  red: {
+    light: '#bc2929ff',
+    dark: '#bc2929ff',
+  },
 };
 
 export default Colors;

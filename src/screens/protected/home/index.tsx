@@ -5,43 +5,54 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
-  Modal,
   Switch,
+  ActivityIndicator,
 } from 'react-native';
 import { Colors, Icons } from '@app/themes';
-import { useIsFocused } from '@react-navigation/native';
 import { useAppDispatch, useAppSelector } from '@app/store';
 import styles from './style';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { handleAlert } from './homeAllFunction';
-import { logout } from '@app/store/service/AuthService';
-import { getTaskList } from '@app/store/service/ToDoService';
-import ToDoCard from '@app/components/common/ToDoCard';
-import { TODO_TYPE } from '@app/types';
-import AddEditToDoModal from '@app/components/common/AddEditToDoModal';
+import { PRODUCT_TYPE } from '@app/types';
+import { navigate } from '@app/navigation/RootNaivgation';
+import ProductCard from '@app/components/common/ProductCard';
+import axios from 'axios';
+import { storeProductListData } from '@app/store/slice/todo.slice';
 import { storeTheme } from '@app/store/slice/auth.slice';
 import { normalize } from '@app/utils/orientation';
+
 const Home: React.FC = () => {
   const dispatch = useAppDispatch();
-
-  const todoList = useAppSelector(state => state.todo.toDoList);
+  const productList = useAppSelector(state => state.todo.productList);
   const isDarkTheme = useAppSelector(state => state.auth.isDarkTheme);
   const theme = isDarkTheme ? 'dark' : 'light';
-  const isFocused = useIsFocused();
-  const [isAddToDoModalShow, setIsAddToDoModalShow] = useState<boolean>(false);
+  const [loader, setLoader] = useState<boolean>(false);
   const toggleSwitch = () => {
     dispatch(storeTheme(!isDarkTheme));
   };
-  useEffect(() => {
-    dispatch(getTaskList(''));
-  }, []);
-  const onPressLogout = () => {
-    dispatch(logout());
+  const getProduct = async () => {
+    try {
+      setLoader(true);
+      let res = await axios.get('https://fakestoreapi.com/products'); 
+      if (Array.isArray(res?.data)) { 
+        dispatch(storeProductListData(res?.data));
+      }
+      setLoader(false);
+    } catch (error) {
+      setLoader(false);
+      console.error('getProduct>>>>>', error);
+    }
   };
-  // console.log('todoList ------------------->>>', todoList);
-  const renderItm = ({ item, index }: { item: TODO_TYPE; index: number }) => (
-    <ToDoCard todoDetails={item} todoIndex={index} />
-  );
+console.log("productList>>>>>>>>.",productList)
+  useEffect(() => {
+    getProduct();
+  }, []);
+  const renderItm = ({
+    item,
+    index,
+  }: {
+    item: PRODUCT_TYPE;
+    index: number;
+  }) => <ProductCard productDetails={item} productIndex={index} />;
   return (
     <SafeAreaView
       style={[
@@ -61,18 +72,39 @@ const Home: React.FC = () => {
             },
           ]}
         >
-          Home
+          All Product
         </Text>
         <TouchableOpacity
           onPress={() => {
-            handleAlert(
-              'Logout',
-              'Are you sure you want to logout?',
-              onPressLogout,
-            );
+            navigate('Contact');
           }}
         >
-          <Image source={Icons.logout} style={styles.icon} />
+          <Image
+            source={Icons.user}
+            style={[
+              styles.icon,
+              {
+                tintColor: Colors.black[theme],
+                marginRight: normalize(8),
+              },
+            ]}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            navigate('WishList');
+          }}
+        >
+          <Image
+            source={Icons.wishlist}
+            style={[
+              styles.icon,
+              {
+                tintColor: Colors.black[theme],
+              },
+            ]}
+          />
         </TouchableOpacity>
       </View>
 
@@ -80,6 +112,7 @@ const Home: React.FC = () => {
         <Text
           style={{
             color: Colors.black[theme],
+            fontWeight: '500',
           }}
         >
           Dark Theme
@@ -97,9 +130,9 @@ const Home: React.FC = () => {
 
       {/* FlatList */}
       <FlatList
-        data={todoList}
+        data={productList}
         renderItem={renderItm}
-        keyExtractor={item => item.key}
+        keyExtractor={item => item.id.toString()}
         contentContainerStyle={styles.listContent}
         initialNumToRender={10}
         maxToRenderPerBatch={10}
@@ -107,33 +140,12 @@ const Home: React.FC = () => {
         updateCellsBatchingPeriod={50}
         removeClippedSubviews={true}
       />
-      <TouchableOpacity
-        onPress={() => {
-          setIsAddToDoModalShow(true);
-        }}
-        style={[
-          styles.floatingButton,
-          {
-            backgroundColor: Colors.black[theme],
-          },
-        ]}
-      >
-        <Text
-          style={[
-            styles.floatingText,
-            {
-              color: Colors.white[theme],
-            },
-          ]}
-        >
-          +
-        </Text>
-      </TouchableOpacity>
 
-      <AddEditToDoModal
-        isVisible={isAddToDoModalShow}
-        setIsvible={setIsAddToDoModalShow}
-      />
+      {loader && (
+        <View style={styles.loader}>
+          <ActivityIndicator size={'large'} color={Colors.black[theme]} />
+        </View>
+      )}
     </SafeAreaView>
   );
 };

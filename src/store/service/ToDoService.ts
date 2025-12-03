@@ -2,6 +2,7 @@ import { TODO_TYPE } from '@app/types';
 import { Dispatch } from 'redux';
 import firestore from '@react-native-firebase/firestore';
 import { storeToDoListData } from '../slice/todo.slice';
+import axios, { AxiosResponse } from 'axios';
 const getTaskList = (payload: any) => {
   return async (dispatch: Dispatch) => {
     let fetchTaskList = firestore()
@@ -62,4 +63,40 @@ const deleteTaskRequest = (payload: string) => {
   };
 };
 
-export { getTaskList, addNewTaskRequest, editTaskRequest, deleteTaskRequest };
+const getProductList = async () => {
+  return async (dispatch: Dispatch) => {
+    try {
+      const result: AxiosResponse<any> = await axios.get(
+        'https://fakestoreapi.com/products/1',
+      );
+
+      const { status, data } = result;
+
+      console.log('result -- ', result);
+
+      if (status === 200) {
+      }
+
+      return {
+        success: status === 200,
+        message: 'Profile fetched successfully',
+      };
+    } catch (error: any) {
+      return {
+        success: false,
+        message: error?.response
+          ? `${error.response?.data?.message}`
+          : `${error?.message}`,
+        data: error?.response.data,
+      };
+    }
+  };
+};
+
+export {
+  getTaskList,
+  addNewTaskRequest,
+  editTaskRequest,
+  deleteTaskRequest,
+  getProductList,
+};

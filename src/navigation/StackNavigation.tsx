@@ -4,11 +4,18 @@ import {
   NavigationContainer,
   Theme,
 } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  StackScreenProps,
+} from '@react-navigation/stack';
 import { RootStackParamList } from '@app/types';
 import { useAppSelector } from '@app/store';
 import Splash from '@screens/public/auth/Splash';
 import { navigationRef } from './RootNaivgation';
+import Home from '@app/screens/protected/home';
+import ProductDetails from '@app/screens/protected/home/ProductDetails';
+import WishList from '@app/screens/protected/wishList';
+import Contact from '@app/screens/protected/contact';
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -37,21 +44,13 @@ export default function StackNavigation() {
     return <Splash />;
   }
 
-  const AuthScreens = {
-    SignIn: {
-      getComponent: () => require('@screens/public/auth/SignIn').default,
-    },
-    SignUp: {
-      getComponent: () => require('@screens/public/auth/SignUp').default,
-    },
-  };
-
   const MainScreens = {
-    Home: {
-      getComponent: () => require('@screens/protected/home').default,
-    },
+    Home: Home,
+    ProductDetails: ProductDetails,
+    WishList: WishList,
+    Contact:Contact
   };
-  const Screens = userDetails != null ? MainScreens : AuthScreens;
+  const Screens = MainScreens;
   // const Screens = { ...AuthScreens, ...MainScreens };
   return (
     <NavigationContainer ref={navigationRef} theme={theme}>
@@ -59,8 +58,12 @@ export default function StackNavigation() {
         {Object.entries(Screens).map(([name, component], index) => (
           <Stack.Screen
             key={index}
-            name={name as keyof RootStackParamList}
-            getComponent={component.getComponent}
+            name={name as keyof RootStackParamList} // Casting the name to RootStackParamList keys
+            component={
+              component as React.ComponentType<
+                StackScreenProps<RootStackParamList>
+              >
+            }
             options={{ gestureEnabled: true }}
           />
         ))}
